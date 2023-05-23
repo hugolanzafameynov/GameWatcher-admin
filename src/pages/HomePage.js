@@ -12,10 +12,8 @@ const HomePage = () => {
         // Récupérer la liste des utilisateurs Firebase
         const getUsers = async (callback) => {
             const usersRef = ref(database, 'utilisateurs');
-            console.log('change')
             const snapshot = await get(usersRef);
             const usersData = snapshot.val();
-            console.log('cc')
             callback(usersData);
         };
 
@@ -49,8 +47,10 @@ const HomePage = () => {
         try {
             // Supprimer l'entrée de la table "utilisateurs"
             const userRef = ref(database, `utilisateurs/${userId}`);
-            remove(userRef).catch();
-
+            remove(userRef)
+                .catch((error) => {
+                    console.error(error);
+                });
             navigate('/home');
         } catch (error) {
             console.log('Erreur lors de la récupération des données de l\'utilisateur :', error);
@@ -82,7 +82,7 @@ return (
                         <img src={user.image} alt="User" style={tableImage}/>
                     </td>
                     <td style={tableCellStyle}>
-                        <button style={deleteButtonStyle} onClick={handleDelete(user.id)}>Supprimer</button>
+                        <button style={deleteButtonStyle} onClick={() => handleDelete(user.id)}>Supprimer</button>
                     </td>
                 </tr>
             ))}
